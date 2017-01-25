@@ -6,13 +6,30 @@
 #include "stb_image.h"
 
 
+void printBits(size_t const size, void const * const ptr)
+{
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+
+    for (i=size-1;i>=0;i--)
+    {
+        for (j=7;j>=0;j--)
+        {
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    }
+    puts("");
+}
+
 struct Coord{
 	unsigned int x;
 	unsigned int y;
 };
 struct PixData{
 	unsigned nibble : 4;	//	1/2 byte
-	uint8_t value;
+	unsigned char value;
 };
 
 int move();		//move cursor in direction dir, with direction- and bounds-checking
@@ -28,17 +45,17 @@ struct Coord size;
 
 int main(){
 	int n;
-	data = stbi_load("test3.png", &(size.x), &(size.y), &n, 4);
+	data = stbi_load("test5.png", &(size.x), &(size.y), &n, 4);
 	printf("%d\n", n);
 	if(n < 4){
 		printf("Not enough channels in image! is there an alpha channel?\n");
 		return 1;
 	}
 	if(data != NULL){
-		printf("it worked?!\n");
 		//find starting position
 		int startsFound = 0;
-		for(unsigned int i = 0; i < size.x*size.y; ++i){
+		for(unsigned int i = 0; i < size.x*size.y; i++){
+			printf("%d:%d\n", i, size.x*size.y);
 			if(data[i*4]&data[i*4+1]&data[i*4+2]&data[i*4+3] == 255){
 				if(startsFound) printf("ERROR: start has already been found! second start found at %d,%d", i%size.x, i/size.x);
 				else{
@@ -49,6 +66,11 @@ int main(){
 				}
 			}
 		}
+		printf("it might be?!??!!");
+		pos.x = 2;
+		pos.y = 3;
+		struct PixData* testDat;
+		get_data(testDat);
 	}
 	stbi_image_free(data);
 	return 0;
@@ -58,15 +80,35 @@ int main(){
 int move(){
 	switch(dir){
 		case 1:
-			pos
+			--pos.y;
 			break;
-		
-		
+		case 2:
+			++pos.x;
+			break;
+		case 3:
+			++pos.y;
+			break;
+		case 4:
+			--pos.x;
+			break;
+		default:
+			printf("not a valid direction");
+			return 1;
+	}
+	if(pos.x >= size.x || pos.y >= size.y){
+		printf("Cursor out of bounds!");
+		return 1;
 	}
 	return 0;
 }
 
 int get_data(struct PixData* datum){
+	int memPos = (size.x*pos.y+pos.x)*4;	//index of the pixel in data
+	int onePix = (data[memPos]&7)<< 9 + (data[memPos+1]&7)<< 6 + (data[memPos+2]&7)<< 3 + (data[memPos+3]&7);	//get full data from string
+	(*datum).nibble = (data[memPos]&7)<< 4 + (data[memPos+1]&4);		//test this?
+	
+	printBits(sizeof(onePix), &onePix);
+	
 	return 0;
 }
 
