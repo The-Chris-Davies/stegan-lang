@@ -1,4 +1,4 @@
-//to build: gcc -Wall -std=c99 -lm -o "%e" "%f"
+//to build: gcc -Wall -Wno-pointer-sign -std=c99 -lm -o "%e" "%f"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -28,8 +28,8 @@ struct Coord{
 	unsigned int y;
 };
 struct PixData{
-	unsigned nibble : 4;	//	1/2 byte
-	unsigned char value;
+	unsigned int nibble : 4;	//	1/2 byte
+	unsigned char stored;
 };
 
 int move();		//move cursor in direction dir, with direction- and bounds-checking
@@ -55,7 +55,6 @@ int main(){
 		//find starting position
 		int startsFound = 0;
 		for(unsigned int i = 0; i < size.x*size.y; i++){
-			printf("%d:%d\n", i, size.x*size.y);
 			if(data[i*4]&data[i*4+1]&data[i*4+2]&data[i*4+3] == 255){
 				if(startsFound) printf("ERROR: start has already been found! second start found at %d,%d", i%size.x, i/size.x);
 				else{
@@ -66,7 +65,6 @@ int main(){
 				}
 			}
 		}
-		printf("it might be?!??!!");
 		pos.x = 2;
 		pos.y = 3;
 		struct PixData* testDat;
@@ -75,7 +73,6 @@ int main(){
 	stbi_image_free(data);
 	return 0;
 }
-
 
 int move(){
 	switch(dir){
@@ -104,11 +101,12 @@ int move(){
 
 int get_data(struct PixData* datum){
 	int memPos = (size.x*pos.y+pos.x)*4;	//index of the pixel in data
-	int onePix = (data[memPos]&7)<< 9 + (data[memPos+1]&7)<< 6 + (data[memPos+2]&7)<< 3 + (data[memPos+3]&7);	//get full data from string
-	(*datum).nibble = (data[memPos]&7)<< 4 + (data[memPos+1]&4);		//test this?
-	
+	int onePix = ((data[memPos]&7)<< 9) + ((data[memPos+1]&7)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get full data from string
+	(*datum).nibble = ((data[memPos]&7)<< 1) + ((data[memPos+1]>>2)&1);		//get first 4 bits of data
+	(*datum).stored = ((data[memPos+1]&4)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next 4 bits of data
+	printf("%d\n", (*datum).nibble);
+	printf("%d\n", (*datum).stored);
 	printBits(sizeof(onePix), &onePix);
-	
 	return 0;
 }
 
