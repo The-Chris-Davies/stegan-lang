@@ -35,8 +35,6 @@ struct PixData{
 int move();		//move cursor in direction dir, with direction- and bounds-checking
 int get_data(struct PixData*);
 int run(struct PixData*);
-int helpMessage(int);
-
 
 int dir = 0;
 unsigned char* data;
@@ -67,8 +65,10 @@ int main(){
 		}
 		pos.x = 2;
 		pos.y = 3;
-		struct PixData* testDat;
-		get_data(testDat);
+		struct PixData testDat;
+		get_data(&testDat);
+		printf("%d\n", testDat.nibble);
+		printf("%d\n", testDat.stored);
 	}
 	stbi_image_free(data);
 	return 0;
@@ -101,30 +101,14 @@ int move(){
 
 int get_data(struct PixData* datum){
 	int memPos = (size.x*pos.y+pos.x)*4;	//index of the pixel in data
-	int onePix = ((data[memPos]&7)<< 9) + ((data[memPos+1]&7)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get full data from string
 	(*datum).nibble = ((data[memPos]&7)<< 1) + ((data[memPos+1]>>2)&1);		//get first 4 bits of data
-	(*datum).stored = ((data[memPos+1]&4)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next 4 bits of data
-	printf("%d\n", (*datum).nibble);
-	printf("%d\n", (*datum).stored);
-	printBits(sizeof(onePix), &onePix);
+	(*datum).stored = ((data[memPos+1]&4)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next byte of data
 	return 0;
 }
 
 int run(struct PixData* datum){
 	move();
 	get_data(datum);
+	
 	return 0;
-}
-
-int helpMessage(int code){
-	switch(code)
-	{
-	case 0:
-		printf("no error found");
-		break;
-	default:
-		printf("could not find error message for that code");
-		return -1;
-	}
-	return code;
 }
