@@ -6,8 +6,7 @@
 #include "stb_image.h"
 
 
-void printBits(size_t const size, void const * const ptr)
-{
+void printBits(size_t const size, void const * const ptr){
     unsigned char *b = (unsigned char*) ptr;
     unsigned char byte;
     int i, j;
@@ -106,9 +105,22 @@ int get_data(struct PixData* datum){
 	return 0;
 }
 
-int run(struct PixData* datum){
+int run(){
+	struct PixData datum;
 	move();
 	get_data(datum);
+	
+	switch(datum.nibble){	//flow control only
+		//end program
+		case 2:
+			return 0;
+		//change direction
+		case 3:
+			dir = datum.stored
+			break;
+		//if statement - TODO
+		case 6:
+			break;
 	
 	return 0;
 }
