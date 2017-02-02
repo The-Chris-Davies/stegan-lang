@@ -27,18 +27,23 @@ struct Coord{
 	unsigned int y;
 };
 struct PixData{
-	unsigned int nibble : 4;	//	1/2 byte
 	unsigned char stored;
+	unsigned int nibble : 4;	//	1/2 byte
+};
+struct Var{
+	unsigned int size;
+	unsigned char* data_addr;
 };
 
 int move();		//move cursor in direction dir, with direction- and bounds-checking
 int get_data(struct PixData*);
-int run(struct PixData*);
+int run();
 
 int dir = 0;
-unsigned char* data;
-struct Coord pos;
-struct Coord size;
+unsigned char* data;	//pixel data from the image
+struct Coord pos;		//current position of the cursor
+struct Coord size;		//maximum size of the image
+struct Var vars[256];	//array of variables for the program
 
 int main(){
 	int n;
@@ -108,7 +113,7 @@ int get_data(struct PixData* datum){
 int run(){
 	struct PixData datum;
 	move();
-	get_data(datum);
+	get_data(&datum);
 	
 	switch(datum.nibble){	//flow control only
 		//end program
@@ -116,11 +121,12 @@ int run(){
 			return 0;
 		//change direction
 		case 3:
-			dir = datum.stored
+			dir = datum.stored;
 			break;
 		//if statement - TODO
 		case 6:
 			break;
+	}
 	
 	return 0;
 }
