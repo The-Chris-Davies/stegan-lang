@@ -37,7 +37,7 @@ struct Var{
 
 int move();		//move cursor in direction dir, with direction- and bounds-checking
 int get_data(struct PixData*);
-int run();
+int run(struct PixData*);
 
 int dir = 0;
 unsigned char* data;	//pixel data from the image
@@ -86,10 +86,10 @@ int move(){
 		case 2:
 			++pos.x;
 			break;
-		case 3:
+		case 4:
 			++pos.y;
 			break;
-		case 4:
+		case 8:
 			--pos.x;
 			break;
 		default:
@@ -105,17 +105,17 @@ int move(){
 
 int get_data(struct PixData* datum){
 	int memPos = (size.x*pos.y+pos.x)*4;	//index of the pixel in data
-	(*datum).nibble = ((data[memPos]&7)<< 1) + ((data[memPos+1]>>2)&1);		//get first 4 bits of data
-	(*datum).stored = ((data[memPos+1]&4)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next byte of data
+	datum->nibble = ((data[memPos]&7)<< 1) + ((data[memPos+1]>>2)&1);		//get first 4 bits of data
+	datum->stored = ((data[memPos+1]&4)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next byte of data
 	return 0;
 }
 
-int run(){
-	struct PixData datum;
+int run(struct PixData* datum){
 	move();
-	get_data(&datum);
+	get_data(datum);
 	
-	switch(datum.nibble){	//flow control only
+	switch(datum->nibble){
+	//pixels that don't require additional data
 		//end program
 		case 2:
 			return 0;
@@ -123,8 +123,28 @@ int run(){
 		case 3:
 			dir = datum.stored;
 			break;
+	//pixels that require additional data
 		//if statement - TODO
 		case 6:
+			break;
+		//add to a variable - TODO
+		case 4:
+			break;
+		//print a variable - TODO
+		case 7:
+			break;
+	//pixels that return data
+		//get input
+		case 8:
+			break;
+		//define a variable
+		case 9:
+			break;
+		//constant value
+		case 10:
+			break;
+		//reference to a variable - TODO
+		case 11:
 			break;
 	}
 	
