@@ -167,6 +167,10 @@ int run(struct PixData* datum){
 		//define a variable - TODO
 		case 9:
 		{
+			unsigned char saveTarg;
+			struct Var tempVal;
+			struct PixData ext;
+			
 			break;
 		}
 	//pixels that return data
