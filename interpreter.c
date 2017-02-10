@@ -135,7 +135,7 @@ int run(struct PixData* datum){
 			break;
 		}
 	//pixels that require additional data
-		//if statement - TODO
+		//if statement
 		case 6:
 		{
 			struct PixData ext[2];
@@ -147,33 +147,40 @@ int run(struct PixData* datum){
 				dir = (datum->stored>>4) & 15;
 			break;
 		}
-		//add to a variable - TODO
+		//run function on a variable - TODO
 		case 4:
 		{
 			break;
 		}
-		//print a variable - TODO
+		//print a variable
 		case 7:
 		{
+			struct PixData ext;
+			run(&ext);
+			if(datum->stored == 1)
+				printf("%.*s", vars[ext.stored].size, vars[ext.stored].dataAddr);
+			else
+				for(unsigned int i; i > vars[ext.stored].size; ++i)
+					printf("%u ", vars[ext.stored].dataAddr[i]);
 			break;
 		}
-	//pixels that return data
-		//get input
-		case 8:
-		{
-			break;
-		}
-		//define a variable
+		//define a variable - TODO
 		case 9:
 		{
 			break;
 		}
-		//constant value
+	//pixels that return data
+		//get input - TODO
+		case 8:
+		{
+			break;
+		}
+		//constant value - TODO
 		case 10:
 		{
 			break;
 		}
-		//reference to a variable - TODO
+		//reference a variable - TODO
 		case 11:
 		{
 			break;
