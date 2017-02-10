@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -21,6 +22,10 @@ void printBits(size_t const size, void const * const ptr){
     }
     puts("");
 }
+int min(int a, int b) {
+  return a < b ? a : b;
+}
+
 
 struct Coord{
 	unsigned int x;
@@ -32,12 +37,13 @@ struct PixData{
 };
 struct Var{
 	unsigned int size;
-	unsigned char* data_addr;
+	unsigned char* dataAddr;
 };
 
 int move();		//move cursor in direction dir, with direction- and bounds-checking
 int get_data(struct PixData*);
 int run(struct PixData*);
+int clearVars();
 
 int dir = 0;
 unsigned char* data;	//pixel data from the image
@@ -74,6 +80,7 @@ int main(){
 		printf("%d\n", testDat.nibble);
 		printf("%d\n", testDat.stored);
 	}
+	clearVars();
 	stbi_image_free(data);
 	return 0;
 }
@@ -118,35 +125,67 @@ int run(struct PixData* datum){
 	//pixels that don't require additional data
 		//end program
 		case 2:
+		{
 			return 0;
+		}
 		//change direction
 		case 3:
-			dir = datum.stored;
+		{
+			dir = datum->stored;
 			break;
+		}
 	//pixels that require additional data
 		//if statement - TODO
 		case 6:
+		{
+			struct PixData ext[2];
+			run(ext);
+			run(&(ext[2]));
+			if(memcmp(vars[ext[0].stored].dataAddr, vars[ext[1].stored].dataAddr, min(vars[ext[0].stored].size, vars[ext[0].stored].size)) > 0)
+				dir = datum->stored & 15;
+			else
+				dir = (datum->stored>>4) & 15;
 			break;
+		}
 		//add to a variable - TODO
 		case 4:
+		{
 			break;
+		}
 		//print a variable - TODO
 		case 7:
+		{
 			break;
+		}
 	//pixels that return data
 		//get input
 		case 8:
+		{
 			break;
+		}
 		//define a variable
 		case 9:
+		{
 			break;
+		}
 		//constant value
 		case 10:
+		{
 			break;
+		}
 		//reference to a variable - TODO
 		case 11:
+		{
 			break;
+		}
 	}
 	
+	return 0;
+}
+
+int clearVars(){
+	for(unsigned int i; i < 256; i++)
+		if(vars[i].size > 0)
+			free(vars[i].dataAddr);
 	return 0;
 }
