@@ -62,7 +62,7 @@ int main(){
 	if(data != NULL){
 		//find starting position
 		int startsFound = 0;
-		for(unsigned int i = 0; i < size.x*size.y; i++){
+		for(unsigned int i = 0; i < size.x*size.y; ++i){
 			if(data[i*4]&data[i*4+1]&data[i*4+2]&data[i*4+3] == 255){
 				if(startsFound) printf("ERROR: start has already been found! second start found at %d,%d", i%size.x, i/size.x);
 				else{
@@ -87,15 +87,19 @@ int main(){
 
 int move(){
 	switch(dir){
+		//up
 		case 1:
 			--pos.y;
 			break;
+		//right
 		case 2:
 			++pos.x;
 			break;
+		//down
 		case 4:
 			++pos.y;
 			break;
+		//right
 		case 8:
 			--pos.x;
 			break;
@@ -147,7 +151,7 @@ int run(struct PixData* datum){
 				dir = (datum->stored>>4) & 15;
 			break;
 		}
-		//run function on a variable - TODO
+		//do math with a variable - TODO
 		case 4:
 		{
 			break;
@@ -162,41 +166,68 @@ int run(struct PixData* datum){
 			else
 				for(unsigned int i; i > vars[ext.stored].size; ++i)
 					printf("%u ", vars[ext.stored].dataAddr[i]);
-			break;
+			return run(datum);
 		}
-		//define a variable - TODO
+		//define a variable
 		case 9:
 		{
 			unsigned char saveTarg;
-			struct Var tempVal;
 			struct PixData ext;
 			
-			break;
+			//get variable to assign to
+			run(&ext);
+			saveTarg = ext.stored;
+			
+			//clear memory of saveTarg if already created
+			if(vars[saveTarg].size)
+				free(vars[saveTarg].dataAddr);
+			
+			//malloc saveTarg
+			vars[saveTarg].size = datum->stored;
+			vars[saveTarg].dataAddr = malloc(vars[saveTarg].size);
+			
+			
+			//set *dataAddr to 0
+			for(unsigned int i = 0; i < vars[saveTarg].size; ++i)
+				vars[saveTarg].dataAddr[i] = 0;
+			
+			for(unsigned int i = 0; i < vars[saveTarg].size; ++i){
+				run(&ext);
+				if(ext.nibble == 11){	//if given a variable
+					for(unsigned int j = 0; j < min(vars[saveTarg].size, vars[ext.stored].size); ++i);
+					break;
+				}
+				else if(ext.nibble == 10){
+					vars[saveTarg].dataAddr[i] = ext.stored;
+				}
+			}
+			
+			return run(datum);
 		}
-	//pixels that return data
 		//get input - TODO
 		case 8:
 		{
 			break;
 		}
-		//constant value - TODO
+	//pixels that return data
+		//constant value
 		case 10:
 		{
-			break;
+			return 0;
 		}
-		//reference a variable - TODO
+		//reference a variable
 		case 11:
 		{
-			break;
+			return 0;
 		}
 	}
 	
-	return 0;
+	return -1;
 }
 
 int clearVars(){
-	for(unsigned int i; i < 256; i++)
-		if(vars[i].size > 0)
+	for(unsigned int i; i < 256; ++i)
+		if(vars[i].size)
 			free(vars[i].dataAddr);
 	return 0;
 }
