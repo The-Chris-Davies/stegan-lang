@@ -51,10 +51,13 @@ struct Coord pos;		//current position of the cursor
 struct Coord size;		//maximum size of the image
 struct Var vars[256];	//array of variables for the program
 
-int main(){
+int main(int argc, char* argv[]){
 	int n;
-	data = stbi_load("test5.png", &(size.x), &(size.y), &n, 4);
-	printf("%d\n", n);
+	if(argc <= 1){
+		printf("no filename given. Exiting...");
+		return -1;
+	}
+	else data = stbi_load(argv[1], &(size.x), &(size.y), &n, 4);
 	if(n < 4){
 		printf("Not enough channels in image! is there an alpha channel?\n");
 		return 1;
@@ -64,21 +67,18 @@ int main(){
 		int startsFound = 0;
 		for(unsigned int i = 0; i < size.x*size.y; ++i){
 			if(data[i*4]&data[i*4+1]&data[i*4+2]&data[i*4+3] == 255){
-				if(startsFound) printf("ERROR: start has already been found! second start found at %d,%d", i%size.x, i/size.x);
+				if(startsFound) printf("Error!\nStart has already been found! second start found at %d,%d", i%size.x, i/size.x);
 				else{
-					printf("\nstart found at %d, %d\n", i%size.x, i/size.x);
 					++startsFound;
 					pos.x = i%size.x;
-					pos.y = i/pos.x;
+					pos.y = i/size.x;
 				}
 			}
 		}
-		pos.x = 2;
-		pos.y = 3;
-		struct PixData testDat;
-		get_data(&testDat);
-		printf("%d\n", testDat.nibble);
-		printf("%d\n", testDat.stored);
+		dir = 2;
+		struct PixData datum;
+		run(&datum);
+		
 	}
 	clearVars();
 	stbi_image_free(data);
@@ -108,7 +108,7 @@ int move(){
 			return 1;
 	}
 	if(pos.x >= size.x || pos.y >= size.y){
-		printf("Cursor out of bounds!");
+		printf("\n\nError!\nCursor out of bounds!\n");
 		return 1;
 	}
 	return 0;
@@ -117,18 +117,18 @@ int move(){
 int get_data(struct PixData* datum){
 	int memPos = (size.x*pos.y+pos.x)*4;	//index of the pixel in data
 	datum->nibble = ((data[memPos]&7)<< 1) + ((data[memPos+1]>>2)&1);		//get first 4 bits of data
-	datum->stored = ((data[memPos+1]&4)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next byte of data
+	datum->stored = ((data[memPos+1]&3)<< 6) + ((data[memPos+2]&7)<< 3) + (data[memPos+3]&7);	//get next byte of data
 	return 0;
 }
 
 int run(struct PixData* datum){
 	move();
 	get_data(datum);
-	
+		
 	switch(datum->nibble){
 	//pixels that don't require additional data
 		//end program
-		case 2:
+		case 0:
 		{
 			return 0;
 		}
@@ -136,7 +136,7 @@ int run(struct PixData* datum){
 		case 3:
 		{
 			dir = datum->stored;
-			break;
+			return run(datum);
 		}
 	//pixels that require additional data
 		//if statement
@@ -149,7 +149,7 @@ int run(struct PixData* datum){
 				dir = datum->stored & 15;
 			else
 				dir = (datum->stored>>4) & 15;
-			break;
+			return run(datum);
 		}
 		//do math with a variable - TODO
 		case 4:
@@ -159,12 +159,14 @@ int run(struct PixData* datum){
 		//print a variable
 		case 7:
 		{
+			
 			struct PixData ext;
 			run(&ext);
+			
 			if(datum->stored == 1)
 				printf("%.*s", vars[ext.stored].size, vars[ext.stored].dataAddr);
 			else
-				for(unsigned int i; i > vars[ext.stored].size; ++i)
+				for(unsigned int i = 0; i < vars[ext.stored].size; ++i)
 					printf("%u ", vars[ext.stored].dataAddr[i]);
 			return run(datum);
 		}
@@ -220,6 +222,8 @@ int run(struct PixData* datum){
 		{
 			return 0;
 		}
+		default:
+			printf("\n\nError!\nnot a valid tile\n");
 	}
 	
 	return -1;
