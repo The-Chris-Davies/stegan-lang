@@ -26,7 +26,6 @@ int min(int a, int b) {
   return a < b ? a : b;
 }
 
-
 struct Coord{
 	unsigned int x;
 	unsigned int y;
@@ -41,9 +40,11 @@ struct Var{
 };
 
 int move();		//move cursor in direction dir, with direction- and bounds-checking
-int get_data(struct PixData*);
-int run(struct PixData*);
-int clearVars();
+int get_data(struct PixData*);		//get data at cursor location
+int run(struct PixData*);			//moves and gets data, automatically
+int clearVars();					//
+int varAdd(struct Var*, struct Var*);
+int varSub(struct Var*, struct Var*);
 
 int dir = 0;
 unsigned char* data;	//pixel data from the image
@@ -54,7 +55,7 @@ struct Var vars[256];	//array of variables for the program
 int main(int argc, char* argv[]){
 	int n;
 	if(argc <= 1){
-		printf("no filename given. Exiting...");
+		printf("\n\nError:\nno filename given. Exiting...\n");
 		return -1;
 	}
 	else data = stbi_load(argv[1], &(size.x), &(size.y), &n, 4);
@@ -154,7 +155,18 @@ int run(struct PixData* datum){
 		//do math with a variable - TODO
 		case 4:
 		{
-			break;
+			struct PixData addTo, getFrom;
+			run(&addTo);
+			run(&getFrom);
+			//add to
+			if(datum->stored == 1){
+				varAdd(&vars[addTo.stored], &vars[getFrom.stored]);
+			}
+			//subtract from
+			if(datum->stored == 2){
+				varSub(&vars[addTo.stored], &vars[getFrom.stored]);
+			}
+			return run(datum);
 		}
 		//print a variable
 		case 7:
@@ -235,3 +247,47 @@ int clearVars(){
 			free(vars[i].dataAddr);
 	return 0;
 }
+
+int varAdd(struct Var* target, struct Var* value){
+	unsigned char carry;
+	int temp;
+	for(unsigned int i = 1; i <= target->size; ++i){
+		//add last carry
+		temp = target->dataAddr[target->size-i] + carry;
+		target->dataAddr[target->size-i] = temp;
+		carry = 0;
+		if(temp != target->dataAddr[target->size-i])			//if overflow:
+			carry = 1;
+
+		//add value[i]
+		if(i <= value->size){
+			temp = target->dataAddr[target->size-i] + value->dataAddr[value->size-i];
+			target->dataAddr[target->size-i] = temp;
+			if(temp != target->dataAddr[target->size-i])		//if overflow:
+				carry = 1;
+		}
+	}
+	return 0;
+}
+int varSub(struct Var* target, struct Var* value){
+	unsigned char carry;
+	int temp;
+	for(unsigned int i = 1; i <= target->size; ++i){
+		//add last carry
+		temp = target->dataAddr[target->size-i] - carry;
+		target->dataAddr[target->size-i] = temp;
+		carry = 0;
+		if(temp != target->dataAddr[target->size-i])			//if overflow:
+			carry = 1;
+
+		//add value[i]
+		if(i <= value->size){
+			temp = target->dataAddr[target->size-i] - value->dataAddr[value->size-i];
+			target->dataAddr[target->size-i] = temp;
+			if(temp != target->dataAddr[target->size-i])		//if overflow:
+				carry = 1;
+		}
+	}
+	return 0;
+}
+
