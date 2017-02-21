@@ -66,16 +66,16 @@ int main(int argc, char* argv[]){
 	if(data != NULL){
 		//find starting position
 		int startsFound = 0;
-		for(unsigned int i = 0; i < size.x*size.y; ++i){
-			if(data[i*4]&data[i*4+1]&data[i*4+2]&data[i*4+3] == 255){
-				if(startsFound) printf("Error!\nStart has already been found! second start found at %d,%d", i%size.x, i/size.x);
-				else{
-					++startsFound;
-					pos.x = i%size.x;
-					pos.y = i/size.x;
+		struct PixData start;
+		for(unsigned int x = 0; x < size.x; ++x)
+			for(unsigned int y = 0; y < size.y; ++y){
+				pos.x = x;
+				pos.y = y;
+				get_data(&start);
+				if(start.nibble == 1){
+					break;
 				}
 			}
-		}
 		dir = 2;
 		struct PixData datum;
 		run(&datum);
@@ -110,7 +110,7 @@ int move(){
 	}
 	if(pos.x >= size.x || pos.y >= size.y){
 		printf("\n\nError!\nCursor out of bounds!\n");
-		return 1;
+		return 2;
 	}
 	return 0;
 }
@@ -123,8 +123,12 @@ int get_data(struct PixData* datum){
 }
 
 int run(struct PixData* datum){
-	move();
-	get_data(datum);
+	int moveError = move();
+	int readError = get_data(datum);
+	if(moveError == 1)
+		printf("\n\nError!\nTried to move in an invalid direction!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
+	else if(moveError == 2)
+		printf("\n\nError!\nTried to move out of bounds!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
 		
 	switch(datum->nibble){
 	//pixels that don't require additional data
