@@ -32,6 +32,7 @@ def resizecb(obj):
 	imgButs.begin()
 	for elem in pixButs:
 		del elem
+	imgButs.clear()
 	win.color(FL_BLACK)
 	pixButs = []
 	win.redraw()
