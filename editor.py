@@ -23,52 +23,88 @@ def exitcb(obj):
 	sys.exit()
 
 def resizecb(obj):
-	global im
-	newsize = fl_input("new size of image?",str(' '.join(im.size)))
-	im.resize(tuple(map(int, results)))
+	global im, pixButs, imgButs
+	
+	newsize = fl_input("new size of image? (space separated)", str(im.size[0]) + ' ' + str(im.size[1])).split()
+	im = im.resize((int(newsize[0]), int(newsize[1])))
+	print newsize
+	butSize = int(min(winSize[0]/float(im.size[0]), winSize[1]/float(im.size[1])))
+	imgButs.begin()
+	for elem in pixButs:
+		del elem
+	win.color(FL_BLACK)
+	pixButs = []
+	win.redraw()
+	for y in xrange(im.size[1]):
+		col = []
+		for x in xrange(im.size[0]):
+			newbut = Pixel(int(x*butSize), int(y*butSize+25), int(butSize), int(butSize), x, y)
+			newbut.callback(pixcb)
+			newbut.box(FL_FLAT_BOX)
+			col.append(newbut)
+		pixButs.append(col)
+	imgButs.end()
+	setcolors(pixButs, im)
+	
 
-def setcolors():
-	for y in range(len(pixButs)):
-		for x in range(len(pixButs[y])):
+def setcolors(toSet, im):
+	global pixButs
+	for y in range(len(toSet)):
+		for x in range(len(toSet[y])):
 			color = im.getpixel((x,y))
 			pixButs[y][x].color(fl_rgb_color(color[0], color[1], color[2]))
 			pixButs[y][x].redraw()
 
+def opencb(obj):
+	global name, im, pixButs, imgButs
+	name= fl_file_chooser('.', '', '')
+	im = Image.open(name)
+	if im.mode != "RGBA":
+		raise TypeError('Image must be RGBA, yours isn\'t')
+	butSize = int(min(winSize[0]/float(im.size[0]), winSize[1]/float(im.size[1])))
+	imgButs.begin()
+	pixButs = []
+	for y in xrange(im.size[1]):
+		col = []
+		for x in xrange(im.size[0]):
+			newbut = Pixel(int(x*butSize), int(y*butSize+25), int(butSize), int(butSize), x, y)
+			newbut.callback(pixcb)
+			newbut.box(FL_FLAT_BOX)
+			col.append(newbut)
+		pixButs.append(col)
+	imgButs.end()
+	setcolors(pixButs, im)
 
-im = Image.open("test5.png")
-pix = im.load()
-print im.format, im.size, im.mode
+def savecb(obj):
+	im.save(name)
 
-name = fl_input("filename?")
-
-try:
-	im=Image.open(name)
-except IOError:
+def newcb(obj):
+	global im
+	name = fl_input("filename?")
 	w = int(fl_input("width of image?","16"))
 	h = int(fl_input("height of image?","16"))
 	im = Image.new("RGBA", (w,h))
 
+
+name = ''
+
 winSize = (500, 500)
 win = Fl_Window(winSize[0], winSize[1]+25, "Stego Editor")
-
-butSize = min(winSize[0]/float(im.size[0]), winSize[1]/float(im.size[1]))
 
 imgButs = Fl_Group(0, 25, winSize[0], winSize[1])
 imgButs.begin()
 pixButs = []
-for y in xrange(im.size[1]):
-	col = []
-	for x in xrange(im.size[0]):
-		newbut = Pixel(int(x*butSize), int(y*butSize+25), int(butSize), int(butSize), x, y)
-		newbut.callback(pixcb)
-		col.append(newbut)
-	pixButs.append(col)
 imgButs.end()
 
-setcolors()
+
 
 mnu = Fl_Menu_Bar(0, 0, win.w(), 25)
+mnu.add("File/Open", 0, opencb)
+mnu.add("File/Save", 0, savecb)
+mnu.add("File/new", 0, newcb)
 mnu.add("File/Exit", FL_F+5, exitcb)
+mnu.add("Edit/resize", 0, resizecb)
+
 
 win.resizable(win)
 

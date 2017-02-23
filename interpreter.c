@@ -65,7 +65,6 @@ int main(int argc, char* argv[]){
 	}
 	if(data != NULL){
 		//find starting position
-		int startsFound = 0;
 		struct PixData start;
 		for(unsigned int x = 0; x < size.x; ++x)
 			for(unsigned int y = 0; y < size.y; ++y){
@@ -137,6 +136,11 @@ int run(struct PixData* datum){
 		{
 			return 0;
 		}
+		//continue
+		case 2:
+		{
+			return run(datum);
+		}
 		//change direction
 		case 3:
 		{
@@ -156,7 +160,7 @@ int run(struct PixData* datum){
 				dir = (datum->stored>>4) & 15;
 			return run(datum);
 		}
-		//do math with a variable - TODO
+		//do math with a variable
 		case 4:
 		{
 			struct PixData addTo, getFrom;
@@ -225,7 +229,16 @@ int run(struct PixData* datum){
 		//get input - TODO
 		case 8:
 		{
-			break;
+			struct PixData ext;
+			run(&ext);
+			unsigned long long buf;
+			scanf("%d", &buf);
+			for(unsigned int i = 0; i < vars[ext.stored].size; ++i){
+				if(!buf) break;	//if ext == 0;
+				vars[ext.stored].dataAddr[vars[ext.stored].size - (i+1)] = buf&255;
+				buf>>=8;
+			}
+			return run(datum);
 		}
 	//pixels that return data
 		//constant value
