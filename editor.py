@@ -95,6 +95,7 @@ def newcb(obj):
 
 def stegocb(obj):
 	saveUnder = fl_file_chooser('save under what image?', '', '')
+	
 
 name = ''
 
