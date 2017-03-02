@@ -1,21 +1,22 @@
-1: Start
-********
+3: Change Direction
+*******************
 Description
 ===========
-Gets input from stdin
+Changes the cursor's direction
 
 Arguments
 =========
 Internal
 --------
-- **direction to move**: The direction to move at the start of the program.
+- **direction to move**: The direction to move.
+
 ===== =====
 Dir   Value
 ===== =====
 up    1
-right 2
-down  4
-left  8
+down  2
+left  4
+right 8
 ===== =====
 
 External

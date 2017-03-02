@@ -21,8 +21,8 @@ left  128            8
 
 External
 --------
-- **var1**: A :doc:`variable reference <11vr>` that represents the first variable to compare.
-- **var2**: A :doc:`variable reference <11vr>` that represents the second variable to compare.
+- **var1**: A :doc:`variable reference <9var>` that represents the first variable to compare.
+- **var2**: A :doc:`variable reference <9var>` that represents the second variable to compare.
 
 Returns
 =======

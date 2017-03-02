@@ -14,9 +14,9 @@ Internal
 Dir   Value
 ===== =====
 up    1
-down  2
-left  4
-right 8
+right 2
+down  4
+left  8
 ===== =====
 
 External

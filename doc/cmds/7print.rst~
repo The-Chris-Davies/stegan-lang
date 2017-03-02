@@ -13,7 +13,7 @@ Internal
 
 External
 --------
-- **var**: The :doc:`variable reference <11vr>` object to print in the specified format.
+- **var**: The :doc:`variable reference <9var>` object to print in the specified format.
 
 Returns
 =======

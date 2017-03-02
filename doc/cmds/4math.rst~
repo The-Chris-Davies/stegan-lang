@@ -8,7 +8,7 @@ Arguments
 =========
 Internal
 --------
-- **Function to Perform**: The type of the variable to store. Set to 1 to add,  or 2 to subtract.
+- **Function to Perform**: The type of the variable to store. Set to 0 to add,  or 1 to subtract.
 
 External
 --------

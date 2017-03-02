@@ -39,7 +39,8 @@ struct Var{
 	unsigned char* dataAddr;
 };
 
-int move();		//move cursor in direction dir, with direction- and bounds-checking
+int 
+move();		//move cursor in direction dir, with direction- and bounds-checking
 int get_data(struct PixData*);		//get data at cursor location
 int run(struct PixData*);			//moves and gets data, automatically
 int clearVars();					//
@@ -66,16 +67,23 @@ int main(int argc, char* argv[]){
 	if(data != NULL){
 		//find starting position
 		struct PixData start;
-		for(unsigned int x = 0; x < size.x; ++x)
-			for(unsigned int y = 0; y < size.y; ++y){
+		struct Coord startPos;
+		int startDir;
+		for(unsigned int x = 0; x < size.x; x++)
+			for(unsigned int y = 0; y < size.y; y++){
 				pos.x = x;
 				pos.y = y;
 				get_data(&start);
 				if(start.nibble == 1){
-					break;
+					startPos.x = pos.x;
+					startPos.y = pos.y;
+					startDir = start.stored;
 				}
 			}
-		dir = 2;
+		pos.x = startPos.x;
+		pos.y = startPos.y;
+		dir = startDir;
+		printf("start position: %d, %d\n", pos.x, pos.y);
 		struct PixData datum;
 		run(&datum);
 		
@@ -87,6 +95,7 @@ int main(int argc, char* argv[]){
 
 int move(){
 	switch(dir){
+		printf("x:%d, y:%d\tdir:%d", pos.x, pos.y, dir);
 		//up
 		case 1:
 			--pos.y;
@@ -99,16 +108,14 @@ int move(){
 		case 4:
 			++pos.y;
 			break;
-		//right
+		//left
 		case 8:
 			--pos.x;
 			break;
 		default:
-			printf("not a valid direction");
 			return 1;
 	}
 	if(pos.x >= size.x || pos.y >= size.y){
-		printf("\n\nError!\nCursor out of bounds!\n");
 		return 2;
 	}
 	return 0;
@@ -232,12 +239,28 @@ int run(struct PixData* datum){
 			struct PixData ext;
 			run(&ext);
 			unsigned long long buf;
-			scanf("%d", &buf);
-			for(unsigned int i = 0; i < vars[ext.stored].size; ++i){
-				if(!buf) break;	//if ext == 0;
-				vars[ext.stored].dataAddr[vars[ext.stored].size - (i+1)] = buf&255;
-				buf>>=8;
+			if(datum->stored == 0){
+				scanf("%d", &buf);
+				for(unsigned int i = 0; i < vars[ext.stored].size; ++i){
+					if(!buf) break;	//if ext == 0;
+					vars[ext.stored].dataAddr[vars[ext.stored].size - (i+1)] = buf&255;
+					buf>>=8;
+				}
 			}
+			else if(datum->stored == 1){
+				char c;
+				for(unsigned int i = 0; i < vars[ext.stored].size; ++i){
+					c = getchar();
+					if(c == EOF){
+						vars[ext.stored].dataAddr[i] = '\0';
+						break;
+					}
+					else
+						vars[ext.stored].dataAddr[i] = c;
+				}
+			}
+					
+					
 			return run(datum);
 		}
 	//pixels that return data

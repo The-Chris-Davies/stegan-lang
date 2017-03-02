@@ -14,11 +14,14 @@ class Pixel(Fl_Button):
 
 def pixcb(obj):
 	global pix
-	'''
-	nibbit = int(fl_input("nibble, byte of data? (space separated)"))
-	'''
-	dataStr = fl_input("RGBA of data? (space-separated)")
-	toPut = tuple([int(x) for x in dataStr.strip().split(' ')])
+	
+	inp = fl_input("nibble, byte of data? (space separated)")
+	print inp
+	nibbit = int(inp.split(' ')[0]), int(inp.split(' ')[1])
+	print nibbit
+	toPut = ((nibbit[0]>>1)&7, (((nibbit[0]&1)<<2) + (nibbit[1]>>6))&7, (nibbit[1]>>3)&7, nibbit[1]&7)
+	print toPut
+
 	pix[obj.pixPos[0], obj.pixPos[1]] = toPut
 	obj.setcolor(toPut[0], toPut[1], toPut[2])		#no alpha in fltk, unfortunately
 	obj.redraw()
@@ -37,7 +40,6 @@ def resizecb(obj):
 	imgButs.begin()
 	pixButs = []
 	imgButs.clear()
-	pixButs = []
 	win.redraw()
 	for y in xrange(im2.size[1]):
 		col = []
@@ -70,6 +72,7 @@ def opencb(obj):
 	butSize = int(min(winSize[0]/float(im.size[0]), winSize[1]/float(im.size[1])))
 	imgButs.begin()
 	pixButs = []
+	imgButs.clear()
 	for y in xrange(im.size[1]):
 		col = []
 		for x in xrange(im.size[0]):
@@ -83,19 +86,31 @@ def opencb(obj):
 	pix = im.load()
 
 def savecb(obj):
-	im.save(name)
+	im.save(name, 'PNG')
 
 def newcb(obj):
 	global im, pix
 	name = fl_input("filename?")
-	w = int(fl_input("width of image?","16"))
-	h = int(fl_input("height of image?","16"))
+	wh = fl_input("new size of image? (space separated)", "16 16").split()
+	w,h = int(wh[0]), int(wh[1])
 	im = Image.new("RGBA", (w,h))
 	pix = im.load()
-
+	butSize = int(min(winSize[0]/float(im.size[0]), winSize[1]/float(im.size[1])))
+	imgButs.begin()
+	pixButs = []
+	imgButs.clear()
+	for y in xrange(im.size[1]):
+		col = []
+		for x in xrange(im.size[0]):
+			newbut = Pixel(int(x*butSize), int(y*butSize+25), int(butSize), int(butSize), x, y)
+			newbut.callback(pixcb)
+			newbut.box(FL_FLAT_BOX)
+			col.append(newbut)
+		pixButs.append(col)
+	imgButs.end()
+	
 def stegocb(obj):
 	saveUnder = fl_file_chooser('save under what image?', '', '')
-	
 
 name = ''
 

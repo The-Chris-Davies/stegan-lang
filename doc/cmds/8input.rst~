@@ -12,7 +12,7 @@ Internal
 
 External
 --------
-- **var**: A :doc:`variable reference <11vr>` object that points to the object to save to.
+- **var**: A :doc:`variable reference <9var>` object that points to the object to save to.
 
 Returns
 =======

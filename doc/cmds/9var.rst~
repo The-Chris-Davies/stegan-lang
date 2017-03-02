@@ -12,7 +12,7 @@ Internal
 
 External
 --------
-- **Var**: A :doc:`variable reference <11vr>` object that points to the object to initialize.
+- **Var**: A :doc:`variable reference <9var>` object that points to the object to initialize.
 - **Value**: A :doc:`constant value <10cv>` holding one byte of data to store to the variable.
 
 .. warning::

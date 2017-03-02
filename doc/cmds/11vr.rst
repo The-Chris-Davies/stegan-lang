@@ -1,0 +1,19 @@
+11: Reference a Variable
+************************
+Description
+===========
+Return a reference to a variable.
+
+Arguments
+=========
+Internal
+--------
+- **Data**: The variable to reference.
+
+External
+--------
+- **None**
+
+Returns
+=======
+- **Data**: The variable number to reference.
