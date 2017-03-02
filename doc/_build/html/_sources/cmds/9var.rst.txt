@@ -1,0 +1,24 @@
+9: Define a Variable
+********************
+Description
+===========
+Defines a variable.
+
+Arguments
+=========
+Internal
+--------
+- **Length of variable to store**: The length of the variable to store. Set to 4 to initialize an int.
+
+External
+--------
+- **Var**: A :doc:`variable reference <9var>` object that points to the object to initialize.
+- **Value**: A :doc:`constant value <10cv>` holding one byte of data to store to the variable.
+
+.. warning::
+   
+   Value is repeated ``len`` times!
+
+Returns
+=======
+- **None**
