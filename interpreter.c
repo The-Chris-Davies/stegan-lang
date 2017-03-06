@@ -83,7 +83,7 @@ int main(int argc, char* argv[]){
 		pos.x = startPos.x;
 		pos.y = startPos.y;
 		dir = startDir;
-		printf("start position: %d, %d\n", pos.x, pos.y);
+		//printf("x:%d, y:%d\tdir:%d\n", pos.x, pos.y, dir);
 		struct PixData datum;
 		run(&datum);
 		
@@ -95,7 +95,6 @@ int main(int argc, char* argv[]){
 
 int move(){
 	switch(dir){
-		printf("x:%d, y:%d\tdir:%d", pos.x, pos.y, dir);
 		//up
 		case 1:
 			--pos.y;
@@ -131,6 +130,7 @@ int get_data(struct PixData* datum){
 int run(struct PixData* datum){
 	int moveError = move();
 	int readError = get_data(datum);
+		
 	if(moveError == 1)
 		printf("\n\nError!\nTried to move in an invalid direction!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
 	else if(moveError == 2)
@@ -158,13 +158,23 @@ int run(struct PixData* datum){
 		//if statement
 		case 6:
 		{
-			struct PixData ext[2];
-			run(ext);
-			run(&(ext[2]));
-			if(memcmp(vars[ext[0].stored].dataAddr, vars[ext[1].stored].dataAddr, min(vars[ext[0].stored].size, vars[ext[0].stored].size)) > 0)
-				dir = datum->stored & 15;
-			else
+			printf("if entered\n");
+			struct PixData ext1;
+			struct PixData ext2;
+			printf("created pixdatas\n");
+			run(&ext1);
+			printf("ran once\n");
+			run(&ext2);
+			printf("ran twice\n");
+			
+			if(memcmp(vars[ext1.stored].dataAddr, vars[ext2.stored].dataAddr, min(vars[ext1.stored].size, vars[ext2.stored].size)) > 0){
+				printf("if is true\n");
 				dir = (datum->stored>>4) & 15;
+			}
+			else{
+				printf("if is false\n");
+				dir = datum->stored & 15;
+			}
 			return run(datum);
 		}
 		//do math with a variable
@@ -193,7 +203,7 @@ int run(struct PixData* datum){
 			if(datum->stored == 1)
 				printf("%.*s", vars[ext.stored].size, vars[ext.stored].dataAddr);
 			else
-				for(unsigned int i = 0; i < vars[ext.stored].size; ++i)
+				for(unsigned int i = 0; i < vars[ext.stored].size; i++)
 					printf("%u ", vars[ext.stored].dataAddr[i]);
 			return run(datum);
 		}
