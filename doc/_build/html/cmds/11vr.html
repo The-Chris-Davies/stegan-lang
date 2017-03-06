@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9: Define a Variable &#8212; Stegan 0.1 documentation</title>
+    <title>11: Reference a Variable &#8212; Stegan 0.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -26,7 +26,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="8: Input" href="8input.html" /> 
+    <link rel="next" title="1: Start" href="1start.html" />
+    <link rel="prev" title="10: Constant Value" href="10cv.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -36,7 +37,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="8input.html" title="8: Input"
+          <a href="1start.html" title="1: Start"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="10cv.html" title="10: Constant Value"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Stegan 0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../syntax.html" accesskey="U">Syntax</a> &#187;</li> 
@@ -48,36 +52,31 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="define-a-variable">
-<h1>9: Define a Variable<a class="headerlink" href="#define-a-variable" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="reference-a-variable">
+<h1>11: Reference a Variable<a class="headerlink" href="#reference-a-variable" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>Defines a variable.</p>
+<p>Return a reference to a variable.</p>
 </div>
 <div class="section" id="arguments">
 <h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="internal">
 <h3>Internal<a class="headerlink" href="#internal" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>Length of variable to store</strong>: The length of the variable to store. Set to 4 to initialize an int.</li>
+<li><strong>Data</strong>: The variable to reference.</li>
 </ul>
 </div>
 <div class="section" id="external">
 <h3>External<a class="headerlink" href="#external" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>Var</strong>: A <a class="reference internal" href="11vr.html"><span class="doc">variable reference</span></a> object that points to the object to initialize.</li>
-<li><strong>Value</strong>: A <a class="reference internal" href="10cv.html"><span class="doc">constant value</span></a> holding one byte of data to store to the variable.</li>
+<li><strong>None</strong></li>
 </ul>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Value is repeated <code class="docutils literal"><span class="pre">len</span></code> times!</p>
-</div>
 </div>
 </div>
 <div class="section" id="returns">
 <h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>None</strong></li>
+<li><strong>Data</strong>: The variable number to reference.</li>
 </ul>
 </div>
 </div>
@@ -90,7 +89,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">9: Define a Variable</a><ul>
+<li><a class="reference internal" href="#">11: Reference a Variable</a><ul>
 <li><a class="reference internal" href="#description">Description</a></li>
 <li><a class="reference internal" href="#arguments">Arguments</a><ul>
 <li><a class="reference internal" href="#internal">Internal</a></li>
@@ -103,12 +102,15 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="8input.html"
-                        title="previous chapter">8: Input</a></p>
+  <p class="topless"><a href="10cv.html"
+                        title="previous chapter">10: Constant Value</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="1start.html"
+                        title="next chapter">1: Start</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/cmds/9var.rst.txt"
+      <li><a href="../_sources/cmds/11vr.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -133,7 +135,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="8input.html" title="8: Input"
+          <a href="1start.html" title="1: Start"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="10cv.html" title="10: Constant Value"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Stegan 0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../syntax.html" >Syntax</a> &#187;</li> 

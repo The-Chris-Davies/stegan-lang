@@ -15,7 +15,9 @@ class Pixel(Fl_Button):
 def pixcb(obj):
 	global pix
 	
-	inp = fl_input("nibble, byte of data? (space separated)")
+	colordat = ((pix[obj.pixPos[0], obj.pixPos[1]][0]&7)<< 1) + ((pix[obj.pixPos[0], obj.pixPos[1]][1]>>2)&1), ((pix[obj.pixPos[0], obj.pixPos[1]][1]&3)<< 6) + (([pix[obj.pixPos[0], obj.pixPos[1]][2]]&7)<< 3) + (pix[obj.pixPos[0], obj.pixPos[1]][3]&7)
+
+	inp = fl_input("nibble, byte of data? (space separated)", str(colordat[0]) + ' ' + str(colordat[1]))
 	print inp
 	nibbit = int(inp.split(' ')[0]), int(inp.split(' ')[1])
 	print nibbit
@@ -35,7 +37,7 @@ def resizecb(obj):
 	newsize = fl_input("new size of image? (space separated)", str(im.size[0]) + ' ' + str(im.size[1])).split()
 	#im = im.resize((int(newsize[0]), int(newsize[1])))
 	im2 = Image.new('RGBA', (int(newsize[0]), int(newsize[1])))
-	pix = im2.load()
+	pix2 = im2.load()
 	butSize = int(min(winSize[0]/float(im2.size[0]), winSize[1]/float(im2.size[1])))
 	imgButs.begin()
 	pixButs = []
@@ -45,7 +47,7 @@ def resizecb(obj):
 		col = []
 		for x in xrange(im2.size[0]):
 			if x < im.size[0] and y < im.size[1]:
-				pix[x, y] = im.getpixel((x,y))
+				pix2[x, y] = pix[x, y]
 			newbut = Pixel(int(x*butSize), int(y*butSize+25), int(butSize), int(butSize), x, y)
 			newbut.callback(pixcb)
 			newbut.box(FL_FLAT_BOX)
@@ -53,13 +55,14 @@ def resizecb(obj):
 		pixButs.append(col)
 	imgButs.end()
 	im = im2
+	pix = pix2
 	setcolors(pixButs, im)
 
 def setcolors(toSet, im):
 	global pixButs
 	for y in range(len(toSet)):
 		for x in range(len(toSet[y])):
-			color = im.getpixel((x,y))
+			color = pix[x, y]
 			pixButs[y][x].setcolor(color[0], color[1], color[2])
 			pixButs[y][x].redraw()
 
@@ -90,7 +93,7 @@ def savecb(obj):
 
 def newcb(obj):
 	global im, pix
-	name = fl_input("filename?")
+	name = fl_file_chooser('New image:', '', '')
 	wh = fl_input("new size of image? (space separated)", "16 16").split()
 	w,h = int(wh[0]), int(wh[1])
 	im = Image.new("RGBA", (w,h))
@@ -111,6 +114,24 @@ def newcb(obj):
 	
 def stegocb(obj):
 	saveUnder = fl_file_chooser('save under what image?', '', '')
+	saveAs = fl_file_chooser('Save as:', '', '')
+	im2 = Image.open(saveUnder)
+	if im2.size[0]<im.size[0] or im2.size[1] < im.size[1]:
+		fl_message("This image is not large enough to embed your code.")
+		return
+
+	pix2 = im2.load()
+	for x in xrange(im2.size[0]):
+		for y in xrange(im2.size[1]):
+			if x > im.size[0] or y > im.size[1]:
+				continue
+			tmp = []
+			for i in xrange(len(pix2[x, y])):
+				tmp.append((pix2[x, y][i] & 248) + (pix[x,y][i] & 7))
+			pix2[x, y] = tuple(tmp)
+	im2.save(saveAs, 'PNG')
+	fl_message("Saved successfully")
+
 
 name = ''
 
