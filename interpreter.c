@@ -130,7 +130,9 @@ int get_data(struct PixData* datum){
 int run(struct PixData* datum){
 	int moveError = move();
 	int readError = get_data(datum);
-		
+	
+	//printf("x: %d\ty: %d\t dir:%d\tnib: %d\tbyte: %d\n", pos.x, pos.y, dir, datum->nibble, datum->stored);
+	
 	if(moveError == 1)
 		printf("\n\nError!\nTried to move in an invalid direction!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
 	else if(moveError == 2)
@@ -158,21 +160,15 @@ int run(struct PixData* datum){
 		//if statement
 		case 6:
 		{
-			printf("if entered\n");
 			struct PixData ext1;
 			struct PixData ext2;
-			printf("created pixdatas\n");
 			run(&ext1);
-			printf("ran once\n");
 			run(&ext2);
-			printf("ran twice\n");
 			
 			if(memcmp(vars[ext1.stored].dataAddr, vars[ext2.stored].dataAddr, min(vars[ext1.stored].size, vars[ext2.stored].size)) > 0){
-				printf("if is true\n");
 				dir = (datum->stored>>4) & 15;
 			}
 			else{
-				printf("if is false\n");
 				dir = datum->stored & 15;
 			}
 			return run(datum);
