@@ -52,6 +52,7 @@ unsigned char* data;	//pixel data from the image
 struct Coord pos;		//current position of the cursor
 struct Coord size;		//maximum size of the image
 struct Var vars[256];	//array of variables for the program
+unsigned long long iters;
 
 int main(int argc, char* argv[]){
 	int n;
@@ -59,7 +60,7 @@ int main(int argc, char* argv[]){
 		printf("\n\nError:\nno filename given. Exiting...\n");
 		return -1;
 	}
-	else data = stbi_load(argv[1], &(size.x), &(size.y), &n, 4);
+	else data = stbi_load(argv[1], (int *)&(size.x), (int *)&(size.y), &n, 4);
 	if(n < 4){
 		printf("Not enough channels in image! is there an alpha channel?\n");
 		return 1;
@@ -86,7 +87,6 @@ int main(int argc, char* argv[]){
 		//printf("x:%d, y:%d\tdir:%d\n", pos.x, pos.y, dir);
 		struct PixData datum;
 		run(&datum);
-		
 	}
 	clearVars();
 	stbi_image_free(data);
@@ -132,6 +132,8 @@ int run(struct PixData* datum){
 	int readError = get_data(datum);
 	
 	//printf("x: %d\ty: %d\t dir:%d\tnib: %d\tbyte: %d\n", pos.x, pos.y, dir, datum->nibble, datum->stored);
+	++iters;
+	printf("%lld\n", iters);
 	
 	if(moveError == 1)
 		printf("\n\nError!\nTried to move in an invalid direction!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
@@ -142,20 +144,14 @@ int run(struct PixData* datum){
 	//pixels that don't require additional data
 		//end program
 		case 0:
-		{
 			return 0;
-		}
 		//continue
 		case 2:
-		{
 			return run(datum);
-		}
 		//change direction
 		case 3:
-		{
 			dir = datum->stored;
 			return run(datum);
-		}
 	//pixels that require additional data
 		//if statement
 		case 6:
@@ -171,8 +167,8 @@ int run(struct PixData* datum){
 			else{
 				dir = datum->stored & 15;
 			}
-			return run(datum);
 		}
+			return run(datum);
 		//do math with a variable
 		case 4:
 		{
@@ -187,12 +183,11 @@ int run(struct PixData* datum){
 			if(datum->stored == 2){
 				varSub(&vars[addTo.stored], &vars[getFrom.stored]);
 			}
-			return run(datum);
 		}
+			return run(datum);
 		//print a variable
 		case 7:
 		{
-			
 			struct PixData ext;
 			run(&ext);
 			
@@ -201,8 +196,8 @@ int run(struct PixData* datum){
 			else
 				for(unsigned int i = 0; i < vars[ext.stored].size; i++)
 					printf("%u ", vars[ext.stored].dataAddr[i]);
-			return run(datum);
 		}
+			return run(datum);
 		//define a variable
 		case 9:
 		{
@@ -236,10 +231,9 @@ int run(struct PixData* datum){
 					vars[saveTarg].dataAddr[i] = ext.stored;
 				}
 			}
-			
-			return run(datum);
 		}
-		//get input - TODO
+			return run(datum);
+		//get input
 		case 8:
 		{
 			struct PixData ext;
@@ -265,21 +259,15 @@ int run(struct PixData* datum){
 						vars[ext.stored].dataAddr[i] = c;
 				}
 			}
-					
-					
-			return run(datum);
 		}
+			return run(datum);
 	//pixels that return data
 		//constant value
 		case 10:
-		{
 			return 0;
-		}
 		//reference a variable
 		case 11:
-		{
 			return 0;
-		}
 		default:
 			printf("\n\nError!\nnot a valid tile\n");
 	}
