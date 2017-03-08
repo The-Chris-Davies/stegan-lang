@@ -246,7 +246,7 @@ int run(struct PixData* datum){
 			run(&ext);
 			unsigned long long buf;
 			if(datum->stored == 0){
-				scanf("%d", &buf);
+				scanf("%lld", &buf);
 				for(unsigned int i = 0; i < vars[ext.stored].size; ++i){
 					if(!buf) break;	//if ext == 0;
 					vars[ext.stored].dataAddr[vars[ext.stored].size - (i+1)] = buf&255;
