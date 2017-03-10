@@ -52,7 +52,8 @@ unsigned char* data;	//pixel data from the image
 struct Coord pos;		//current position of the cursor
 struct Coord size;		//maximum size of the image
 struct Var vars[256];	//array of variables for the program
-unsigned long long iters;
+long long depth;
+
 
 int main(int argc, char* argv[]){
 	int n;
@@ -86,7 +87,17 @@ int main(int argc, char* argv[]){
 		dir = startDir;
 		//printf("x:%d, y:%d\tdir:%d\n", pos.x, pos.y, dir);
 		struct PixData datum;
-		run(&datum);
+		int error;
+		while(1){
+			depth = 0;
+			error = run(&datum);
+			if(error == -1)		//if end pixel was encountered
+				break;
+			else if(error == 1)
+				printf("\n\nError!\nFloating data pixel at Pos: %d %d", pos.x, pos.y);
+			else if(error == 2)
+				printf("\n\nError!\nUnrecognized data pixel at Pos: %d %d", pos.x, pos.y);
+		}
 	}
 	clearVars();
 	stbi_image_free(data);
@@ -132,30 +143,31 @@ int run(struct PixData* datum){
 	int readError = get_data(datum);
 	
 	//printf("x: %d\ty: %d\t dir:%d\tnib: %d\tbyte: %d\n", pos.x, pos.y, dir, datum->nibble, datum->stored);
-	++iters;
-	printf("%lld\n", iters);
 	
 	if(moveError == 1)
 		printf("\n\nError!\nTried to move in an invalid direction!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
 	else if(moveError == 2)
 		printf("\n\nError!\nTried to move out of bounds!\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
-		
+	if(depth > 1000)
+		printf("\n\nError!\nMaximum function depth exceeded!\nYou may have started a function before a loop and didn't end it.\n\tDirection: %d\n\tPos: %d %d", dir, pos.x, pos.y);
+	
 	switch(datum->nibble){
 	//pixels that don't require additional data
 		//end program
 		case 0:
-			return 0;
+			return -1;
 		//continue
 		case 2:
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 		//change direction
 		case 3:
 			dir = datum->stored;
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 	//pixels that require additional data
 		//if statement
 		case 6:
 		{
+			++depth;
 			struct PixData ext1;
 			struct PixData ext2;
 			run(&ext1);
@@ -168,10 +180,11 @@ int run(struct PixData* datum){
 				dir = datum->stored & 15;
 			}
 		}
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 		//do math with a variable
 		case 4:
 		{
+			++depth;
 			struct PixData addTo, getFrom;
 			run(&addTo);
 			run(&getFrom);
@@ -184,10 +197,11 @@ int run(struct PixData* datum){
 				varSub(&vars[addTo.stored], &vars[getFrom.stored]);
 			}
 		}
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 		//print a variable
 		case 7:
 		{
+			++depth;
 			struct PixData ext;
 			run(&ext);
 			
@@ -197,10 +211,11 @@ int run(struct PixData* datum){
 				for(unsigned int i = 0; i < vars[ext.stored].size; i++)
 					printf("%u ", vars[ext.stored].dataAddr[i]);
 		}
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 		//define a variable
 		case 9:
 		{
+			++depth;
 			unsigned char saveTarg;
 			struct PixData ext;
 			
@@ -232,10 +247,11 @@ int run(struct PixData* datum){
 				}
 			}
 		}
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 		//get input
 		case 8:
 		{
+			++depth;
 			struct PixData ext;
 			run(&ext);
 			unsigned long long buf;
@@ -260,19 +276,19 @@ int run(struct PixData* datum){
 				}
 			}
 		}
-			return run(datum);
+			if(depth <= 1) return 0; else return run(datum);
 	//pixels that return data
 		//constant value
 		case 10:
-			return 0;
+			return 1;
 		//reference a variable
 		case 11:
-			return 0;
+			return 1;
 		default:
 			printf("\n\nError!\nnot a valid tile\n");
 	}
 	
-	return -1;
+	return 2;
 }
 
 int clearVars(){
