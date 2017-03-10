@@ -28,7 +28,8 @@ def pixcb(obj):
 	obj.redraw()
 
 def exitcb(obj):
-	sys.exit()
+	if fl_ask("Do you really want to exit? any unsaved data will be lost"):
+		sys.exit()
 
 def resizecb(obj):
 	global im, pix, pixButs, imgButs
@@ -90,6 +91,7 @@ def opencb(obj):
 		pixButs.append(col)
 	imgButs.end()
 	setcolors(pixButs, im)
+	win.label(name)
 	
 
 def savecb(obj):
@@ -101,6 +103,7 @@ def saveascb(obj):
 	name = fl_file_chooser('Save image as:', '', '')
 	im.save(name, 'PNG')
 	fl_message("Saved successfully")
+	win.label(name)
 
 def newcb(obj):
 	global im, pix
@@ -124,6 +127,7 @@ def newcb(obj):
 			col.append(newbut)
 		pixButs.append(col)
 	imgButs.end()
+	win.label(name)
 	
 def stegocb(obj):
 	saveUnder = fl_file_chooser('save under what image?', '', '')
@@ -152,21 +156,20 @@ name = ''
 
 winSize = (500, 500)
 win = Fl_Window(winSize[0], winSize[1]+25, "Stego Editor")
+win.callback(exitcb)
 
 imgButs = Fl_Group(0, 25, winSize[0], winSize[1])
 imgButs.begin()
 pixButs = []
 imgButs.end()
 
-
-
 mnu = Fl_Menu_Bar(0, 0, win.w(), 25)
-mnu.add("File/Open", 0, opencb)
-mnu.add("File/Save", 0, savecb)
-mnu.add("File/New", 0, newcb)
-mnu.add("File/Exit", FL_F+5, exitcb)
-mnu.add("Edit/Resize", 0, resizecb)
-mnu.add("File/Hide In", 0, stegocb)
+mnu.add("File/Open", FL_CTRL | ord('o'), opencb)
+mnu.add("File/Save", FL_CTRL | ord('s'), savecb)
+mnu.add("File/New", FL_CTRL | ord('n'), newcb)
+mnu.add("File/Exit", 0, exitcb)
+mnu.add("Edit/Resize", FL_CTRL | ord('r'), resizecb)
+mnu.add("File/Hide In", FL_CTRL | ord('S'), stegocb)
 mnu.add("File/Save As", 0, saveascb)
 
 win.resizable(win)
