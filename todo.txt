@@ -1,0 +1,19 @@
+Stegan 1.0 TODO:
+Interpreter:
+	-make numbers ALWAYS 8 bytes long
+		-print function overhaul
+		-math pixel checks for length 8 or whatever
+		-variable definition -> 0 for int definition
+	-more math functions
+	-new pixel - string manipulation - number 5
+	-fix input
+
+Editor:
+	-Zoom and pan functions
+	-better resize - pick which side to add to?
+		-or in between rows/columns?
+
+Documentation:
+	-Errors / recursion depth page
+	-String manipulation pixel
+	-Updates to variable initialization, math functions, etc.
