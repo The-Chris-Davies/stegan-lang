@@ -1,12 +1,22 @@
 Stegan 1.0 TODO:
 Interpreter:
 	-make numbers ALWAYS 8 bytes long
+		-USE FLOATS?!???
 		-print function overhaul
 		-math pixel checks for length 8 or whatever
 		-variable definition -> 0 for int definition
 	-more math functions
+		-multiplication
+		-division
+		-pow
 	-new pixel - string manipulation - number 5
+		-get length
+		-increase length by 1
+		-get char at [x]
+		-getchar
+		-setchar
 	-fix input
+	-make variable definitions work with copying already-existing variable.
 
 Editor:
 	-Zoom and pan functions
@@ -17,3 +27,6 @@ Documentation:
 	-Errors / recursion depth page
 	-String manipulation pixel
 	-Updates to variable initialization, math functions, etc.
+	-variable initialization: alternative definition with other already-defined variable
+
+DONE:

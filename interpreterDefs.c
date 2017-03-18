@@ -145,23 +145,32 @@ int run(struct PixData* datum){
 			if(vars[saveTarg].size)
 				free(vars[saveTarg].dataAddr);
 			
-			//malloc saveTarg
-			vars[saveTarg].size = datum->stored;
-			vars[saveTarg].dataAddr = malloc(vars[saveTarg].size);
+			//if variable will be defined as an int
+			if(datum->stored = 0){
+				//malloc saveTarg
+				vars[saveTarg].size = -1;
+				vars[saveTarg].dataAddr = malloc(sizeof(long long));
+				*dataAddr = 0;
+			}
+			//if variable is a string
+			else{
+				//malloc saveTarg
+				vars[saveTarg].size = datum->stored;
+				vars[saveTarg].dataAddr = malloc(vars[saveTarg].size);
 			
-			
-			//set *dataAddr to 0
-			for(unsigned int i = 0; i < vars[saveTarg].size; ++i)
-				vars[saveTarg].dataAddr[i] = 0;
-			
-			for(unsigned int i = 0; i < vars[saveTarg].size; ++i){
-				run(&ext);
-				if(ext.nibble == 11){	//if given a variable
-					for(unsigned int j = 0; j < min(vars[saveTarg].size, vars[ext.stored].size); ++i);
-					break;
-				}
-				else if(ext.nibble == 10){
-					vars[saveTarg].dataAddr[i] = ext.stored;
+				//set *dataAddr to 0
+				for(unsigned int i = 0; i < vars[saveTarg].size; ++i)
+					vars[saveTarg].dataAddr[i] = 0;
+				
+				for(unsigned int i = 0; i < vars[saveTarg].size; ++i){
+					run(&ext);
+					if(ext.nibble == 11){	//if given a variable
+						for(unsigned int j = 0; j < min(vars[saveTarg].size, vars[ext.stored].size); ++i);	//TODO: MAKE THIS WORK
+						break;
+					}
+					else if(ext.nibble == 10){
+						vars[saveTarg].dataAddr[i] = ext.stored;
+					}
 				}
 			}
 		}

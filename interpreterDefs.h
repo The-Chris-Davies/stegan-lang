@@ -10,7 +10,7 @@ struct PixData{
 	unsigned int nibble : 4;	//	1/2 byte
 };
 struct Var{
-	unsigned int size;
+	int size;
 	unsigned char* dataAddr;
 };
 
