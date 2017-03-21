@@ -12,6 +12,7 @@ Welcome to Stegan's documentation!
    Introduction <intro>
    Examples <examples>
    Syntax <syntax>
+   Errors and Limits <errors>
 
 Indices and tables
 ==================

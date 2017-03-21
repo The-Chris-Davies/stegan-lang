@@ -1,32 +1,42 @@
-Stegan 1.0 TODO:
+Stegan 2.0 TODO:
 Interpreter:
-	-make numbers ALWAYS 8 bytes long
-		-USE FLOATS?!???
-		-print function overhaul
-		-math pixel checks for length 8 or whatever
-		-variable definition -> 0 for int definition
-	-more math functions
-		-multiplication
-		-division
-		-pow
-	-new pixel - string manipulation - number 5
-		-get length
-		-increase length by 1
-		-get char at [x]
-		-getchar
-		-setchar
-	-fix input
-	-make variable definitions work with copying already-existing variable.
+	-variable definitions copying string to int / vice versa?
+	-better error checking? (save location of function object / actual source of error?)
+	-error checking: what if malloc/realloc == NULL?
 
 Editor:
 	-Zoom and pan functions
 	-better resize - pick which side to add to?
 		-or in between rows/columns?
+	-use chars to define vars
+	-how to define int easily? (set vars next to it?)
+		-or a tool that will tell you what pixels to put, given an int?
 
 Documentation:
 	-Errors / recursion depth page
+		-fill in all different types of error
 	-String manipulation pixel
+		-deletes & re-initializes some things (figure out what)
+		-some operations do not need initialized vars (look it up)
+		-substr:
+			-if substr is longer than the end of str, it copies until it reaches the end.
+	-Make Examples and update example page!
 	-Updates to variable initialization, math functions, etc.
-	-variable initialization: alternative definition with other already-defined variable
+	-variable initialization
+		-check to make sure formatting is right
+	-print function: no longer uses ext
+	-math functions: multiplication, division
+	-print function update
+	-input: now three types instead of two
+	-if statement: will output false for two different data types / two uninitialized vars
+
+
 
 DONE:
+	-print function overhaul
+	-variable definition -> 0 for int definition
+	-math pixel checks for length 8 or whatever
+	-new math functions: * and /
+	-variable definitions work with copying already-existing variable (of the same type).
+	-input works with vars / now 3 types instead of 2
+	-new pixel: string!
