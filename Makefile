@@ -1,9 +1,8 @@
 CC = gcc
 FLAGS = -Wall -std=c99
 LIBS = -lm
-OBJS = interpreter.o interpreterDefs.o
 TARGET = stegan
-OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+OBJS = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 
 default: $(TARGET)
