@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9: Define a Variable &#8212; Stegan 0.1 documentation</title>
+    <title>9: Define a Variable &#8212; Stegan 2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Errors" href="../errors.html" />
     <link rel="prev" title="8: Input" href="8input.html" /> 
   </head>
   <body role="document">
@@ -36,9 +37,12 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../errors.html" title="Errors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="8input.html" title="8: Input"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Stegan 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Stegan 2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../syntax.html" accesskey="U">Syntax</a> &#187;</li> 
       </ul>
     </div>  
@@ -59,18 +63,23 @@
 <div class="section" id="internal">
 <h3>Internal<a class="headerlink" href="#internal" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>Length of variable to store</strong>: The length of the variable to store. Set to 4 to initialize an int.</li>
+<li><strong>Length/type of variable to store</strong>: The length of the variable to store. <strong>Set to 0 to initialize an int.</strong></li>
 </ul>
 </div>
 <div class="section" id="external">
 <h3>External<a class="headerlink" href="#external" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><strong>Var</strong>: A <a class="reference internal" href="11vr.html"><span class="doc">variable reference</span></a> object that points to the object to initialize.</li>
+<li><strong>Var</strong>: A <a class="reference internal" href="11vr.html"><span class="doc">variable reference</span></a> object that points to a variable to set the initialized value to.</li>
+</ul>
+<p><strong>*OR*</strong></p>
+<ul class="simple">
 <li><strong>Value</strong>: A <a class="reference internal" href="10cv.html"><span class="doc">constant value</span></a> holding one byte of data to store to the variable.</li>
 </ul>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Value is repeated <code class="docutils literal"><span class="pre">len</span></code> times!</p>
+<p class="last">An additional <code class="docutils literal"><span class="pre">Value</span></code> pixel is required for every length of the variable.
+8 <code class="docutils literal"><span class="pre">Value</span></code> pixels are required to initialize an int.</p>
 </div>
 </div>
 </div>
@@ -105,6 +114,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="8input.html"
                         title="previous chapter">8: Input</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../errors.html"
+                        title="next chapter">Errors</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -133,9 +145,12 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../errors.html" title="Errors"
+             >next</a> |</li>
+        <li class="right" >
           <a href="8input.html" title="8: Input"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Stegan 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Stegan 2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../syntax.html" >Syntax</a> &#187;</li> 
       </ul>
     </div>

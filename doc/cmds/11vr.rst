@@ -16,4 +16,4 @@ External
 
 Returns
 =======
-- **Data**: The variable number to reference.
+- **Data**: The variable index to reference.

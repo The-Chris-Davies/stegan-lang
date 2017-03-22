@@ -9,11 +9,11 @@ Arguments
 =========
 Internal
 --------
-- **Type to Print**: The type of the variable to store. Set to 0 to print as an int, set to 1 to print as a string.
+- **var**: The index of the variable to print.
 
 External
 --------
-- **var**: The :doc:`variable reference <11vr>` object to print in the specified format.
+- **None**
 
 Returns
 =======

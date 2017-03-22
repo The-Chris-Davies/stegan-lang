@@ -4,6 +4,8 @@ Description
 ===========
 Compares two variables, and sets the direction of the cursor to one of two values, depending on the result.
 
+If the two variables are different types or are uninitialized, they are unequal.
+
 Arguments
 =========
 Internal

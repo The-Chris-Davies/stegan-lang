@@ -160,8 +160,10 @@ int run(struct PixData* datum){
 				case 2:
 					//ext1 is the string, ext2 is the new length
 					if(vars[ext1.stored].size >= 0){
+						vars[ext1.stored].dataAddr = realloc(vars[ext1.stored].dataAddr, *((int64_t*)vars[ext2.stored].dataAddr));
+						for(unsigned int i = vars[ext1.stored].size; i < *((int64_t*)vars[ext2.stored].dataAddr; i++)
+							vars[ext1.stored].size = 0;
 						vars[ext1.stored].size = *((int64_t*)vars[ext2.stored].dataAddr);
-						vars[ext1.stored].dataAddr = realloc(vars[ext1.stored].dataAddr, vars[ext1.stored].size);
 					}
 					else
 						printf("\n\nError!\nTrying to set the length of a non-string!\nVar %d may be uninitialized or may be an int!\n\tDirection: %d\n\tPos: %d %d\n", ext1.stored, dir, pos.x, pos.y);

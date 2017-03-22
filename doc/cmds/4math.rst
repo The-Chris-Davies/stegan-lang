@@ -2,17 +2,17 @@
 *******
 Description
 ===========
-Adds or subtracts variable 2 from variable 1.
+Various math functions for ints.
 
 Arguments
 =========
 Internal
 --------
-- **Function to Perform**: The type of the variable to store. Set to 1 to add,  or 2 to subtract.
+- **Operation to Perform**: The operation type. Set to 1 to add, 2 to subtract, 3 to multiply, and 4 to divide.
 
 External
 --------
-- **var1**: A :doc:`variable reference <11vr>` Variable to add to or subtract from. This variable will have the final value written to it.
+- **var1**: A :doc:`variable reference <11vr>` Variable to do math to and save to. This variable will have the final value written to it.
 - **var2**: A :doc:`variable reference <11vr>` Variable to add to/subtract from Var1.
 
 Returns

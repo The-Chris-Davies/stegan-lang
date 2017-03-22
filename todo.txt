@@ -3,6 +3,7 @@ Interpreter:
 	-variable definitions copying string to int / vice versa?
 	-better error checking? (save location of function object / actual source of error?)
 	-error checking: what if malloc/realloc == NULL?
+	-end takes a variable reference to return?
 
 Editor:
 	-Zoom and pan functions
@@ -15,20 +16,7 @@ Editor:
 Documentation:
 	-Errors / recursion depth page
 		-fill in all different types of error
-	-String manipulation pixel
-		-deletes & re-initializes some things (figure out what)
-		-some operations do not need initialized vars (look it up)
-		-substr:
-			-if substr is longer than the end of str, it copies until it reaches the end.
 	-Make Examples and update example page!
-	-Updates to variable initialization, math functions, etc.
-	-variable initialization
-		-check to make sure formatting is right
-	-print function: no longer uses ext
-	-math functions: multiplication, division
-	-print function update
-	-input: now three types instead of two
-	-if statement: will output false for two different data types / two uninitialized vars
 
 
 

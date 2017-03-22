@@ -16,5 +16,3 @@ Welcome to Stegan's documentation!
 
 Indices and tables
 ==================
-
-* :ref:`search`

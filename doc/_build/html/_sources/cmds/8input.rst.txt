@@ -8,7 +8,7 @@ Arguments
 =========
 Internal
 --------
-- **Type to Store**: The type of the variable to store. Set to 0 to store input as string, set to 1 to store input as int.
+- **Type to Store**: The type of the variable to store. Set to 0 to store input as int, set to 1 to store input as string with a fixed size, and 2 to reinitialize the variable with the length of the input, then fill it.
 
 External
 --------
