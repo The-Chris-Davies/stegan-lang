@@ -251,7 +251,7 @@ int run(struct PixData* datum){
 				run(&ext);
 				if(ext.nibble == 11){	//if given a variable
 					if(vars[ext.stored].size < 0 && vars[saveTarg].size < 0)	//if both variables are ints
-						*((int*)vars[saveTarg].dataAddr) = *((int*)vars[ext.stored].dataAddr);
+						*((int64_t*)vars[saveTarg].dataAddr) = *((int64_t*)vars[ext.stored].dataAddr);
 					else if(vars[ext.stored].size > 0 && vars[saveTarg].size > 0)	//elif both vars are strs
 						for(unsigned int j = 0; j < min(vars[saveTarg].size, vars[ext.stored].size); ++i)
 							vars[saveTarg].dataAddr[j] = vars[ext.stored].dataAddr[j];
