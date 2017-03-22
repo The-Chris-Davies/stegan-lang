@@ -23,7 +23,7 @@ External
 .. warning::
    
    An additional ``Value`` pixel is required for every length of the variable.
-   8 ``Value`` pixels are required to initialize an int.
+   8 ``Value`` pixels are required to initialize an int. These start from least significant byte to most significant byte.
 
 Returns
 =======

@@ -6,6 +6,7 @@ Interpreter:
 	-end takes a variable reference to return?
 
 Editor:
+	-SAVING NEW IMAGE DOESN'T WORK???
 	-Zoom and pan functions
 	-better resize - pick which side to add to?
 		-or in between rows/columns?

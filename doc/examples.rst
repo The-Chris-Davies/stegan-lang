@@ -12,13 +12,13 @@ Count Up
 ========
 countUp.png
 
-This program counts up from 1 indefinitely, disregarding overflows, and eventually causes a segmentation fault.
+This program counts up from 1 indefinitely.
 
 Count Up 2
 ==========
 countUp2.png
 
-This program is a modified count up, and will exit after counting to 255.
+This program is a modified count up, and will exit after counting to 100.
 
 Hello World Hidden
 ==================

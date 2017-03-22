@@ -61,7 +61,7 @@ int run(struct PixData* datum){
 	int moveError = move();
 	get_data(datum);	//no errors will be returned here (yet)
 	
-	//printf("x: %d\ty: %d\t dir:%d\tnib: %d\tbyte: %d\n", pos.x, pos.y, dir, datum->nibble, datum->stored);
+	//printf("x: %d\ty: %d\tdir:%d\tnib: %d\tbyte: %d\n", pos.x, pos.y, dir, datum->nibble, datum->stored);
 	
 	if(moveError == 1)
 		printf("\n\nError!\nTried to move in an invalid direction!\n\tDirection: %d\n\tPos: %d %d\n", dir, pos.x, pos.y);
@@ -92,13 +92,17 @@ int run(struct PixData* datum){
 			run(&ext1);
 			run(&ext2);
 			
-			if(vars[ext1.stored].size > 0 && vars[ext2.stored].size > 0 && memcmp(vars[ext1.stored].dataAddr, vars[ext2.stored].dataAddr, min(vars[ext1.stored].size, vars[ext2.stored].size)) > 0)
+			//printf("var1: %" PRId64 "\nvar2: %" PRId64 "\n", *((int64_t*)vars[ext1.stored].dataAddr), *((int64_t*)vars[ext2.stored].dataAddr));
+			
+			if(vars[ext1.stored].size > 0 && vars[ext2.stored].size > 0 && memcmp(vars[ext1.stored].dataAddr, vars[ext2.stored].dataAddr, min(vars[ext1.stored].size, vars[ext2.stored].size)) > 0){
 				dir = (datum->stored>>4) & 15;
-			else if(vars[ext1.stored].size == -1 && vars[ext2.stored].size == -1 && *((int64_t*)vars[ext1.stored].dataAddr) == *((int64_t*)vars[ext2.stored].dataAddr))
+			}
+			else if(vars[ext1.stored].size < 0 && vars[ext2.stored].size < 0 && *((int64_t*)vars[ext1.stored].dataAddr) < *((int64_t*)vars[ext2.stored].dataAddr)){
 				dir = (datum->stored>>4) & 15;
-				
-			else
+			}
+			else{
 				dir = datum->stored & 15;
+			}
 			--depth;
 			if(depth > 0) return run(datum); else return 0;
 		}
@@ -111,22 +115,26 @@ int run(struct PixData* datum){
 			run(&getFrom);
 			//if both variables are ints
 			if(vars[addTo.stored].size == -1 && vars[getFrom.stored].size == -1){
+				//printf("\nvar1:\t%" PRId64 "\nvar2:\t%" PRId64 "\n", *((int64_t*)vars[addTo.stored].dataAddr), *((int64_t*)vars[getFrom.stored].dataAddr));
 				switch(datum->stored){
 					//add to
 					case 1:
-						*((int64_t*)vars[addTo.stored].dataAddr) += *((int*)vars[getFrom.stored].dataAddr);
+						*((int64_t*)vars[addTo.stored].dataAddr) += *((int64_t*)vars[getFrom.stored].dataAddr);
 						break;
 					//subtract from
 					case 2:
-						*((int*)vars[addTo.stored].dataAddr) -= *((int*)vars[getFrom.stored].dataAddr);
+						*((int64_t*)vars[addTo.stored].dataAddr) -= *((int64_t*)vars[getFrom.stored].dataAddr);
 						break;
 					//multiply by
 					case 3:
-						*((int*)vars[addTo.stored].dataAddr) *= *((int*)vars[getFrom.stored].dataAddr);
+						*((int64_t*)vars[addTo.stored].dataAddr) *= *((int64_t*)vars[getFrom.stored].dataAddr);
 						break;
 					//divide by
 					case 4:
-						*((int*)vars[addTo.stored].dataAddr) /= *((int*)vars[getFrom.stored].dataAddr);
+						*((int64_t*)vars[addTo.stored].dataAddr) /= *((int64_t*)vars[getFrom.stored].dataAddr);
+						break;
+					case 5:
+						*((int64_t*)vars[addTo.stored].dataAddr) %= *((int64_t*)vars[getFrom.stored].dataAddr);
 						break;
 					default:
 						printf("\n\nError!\nMath function argument is not a valid operation!\n\tDirection: %d\n\tPos: %d %d\n", dir, pos.x, pos.y);
@@ -161,7 +169,7 @@ int run(struct PixData* datum){
 					//ext1 is the string, ext2 is the new length
 					if(vars[ext1.stored].size >= 0){
 						vars[ext1.stored].dataAddr = realloc(vars[ext1.stored].dataAddr, *((int64_t*)vars[ext2.stored].dataAddr));
-						for(unsigned int i = vars[ext1.stored].size; i < *((int64_t*)vars[ext2.stored].dataAddr; i++)
+						for(unsigned int i = vars[ext1.stored].size; i < *((int64_t*)vars[ext2.stored].dataAddr); i++)
 							vars[ext1.stored].size = 0;
 						vars[ext1.stored].size = *((int64_t*)vars[ext2.stored].dataAddr);
 					}
@@ -202,7 +210,7 @@ int run(struct PixData* datum){
 		{
 			if(vars[datum->stored].size > 0)
 				printf("%.*s", vars[datum->stored].size, vars[datum->stored].dataAddr);
-			else if(vars[datum->stored].size > 0)
+			else if(vars[datum->stored].size < 0)
 				printf("%" PRId64 "", *((int64_t*)vars[datum->stored].dataAddr));
 			if(depth > 0) return run(datum); else return 0;
 		}
