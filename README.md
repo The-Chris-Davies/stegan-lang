@@ -1,4 +1,4 @@
-#stegan-lang
+# stegan-lang
 A steganographic, esoteric programming language
 
 Stegan is an interpreted programming language whose source code is an image.
