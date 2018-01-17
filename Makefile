@@ -2,8 +2,8 @@ CC = gcc
 FLAGS = -Wall -std=c99
 LIBS = -lm
 TARGET = stegan
-OBJS = $(patsubst %.c, %.o, $(wildcard *.c))
-HEADERS = $(wildcard *.h)
+OBJS = $(patsubst %.c, %.o, $(wildcard src/*.c))
+HEADERS = $(wildcard src/*.h)
 
 default: $(TARGET)
 
